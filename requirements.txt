@@ -1,6 +1,9 @@
 black
+pandas
 pylint
 pytest
 requests
 requests-oauthlib
 streamlit
+torch
+transformers
