@@ -5,7 +5,7 @@ import streamlit as st
 import json
 
 # main function
-# session state collects: gfs, cc, r, term
+# session state collects: gfs, r, term
 def main():
 
     # Streamlit title
