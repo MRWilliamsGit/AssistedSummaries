@@ -2,7 +2,7 @@ import re
 import pandas as pd
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
-# Create class for generative summarization
+
 class GenFinSummarizer:
     def __init__(self):
 

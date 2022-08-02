@@ -4,6 +4,7 @@ pylint
 pytest
 requests
 requests-oauthlib
+sklearn
 streamlit
 torch
 transformers

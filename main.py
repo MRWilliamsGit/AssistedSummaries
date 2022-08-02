@@ -1,10 +1,20 @@
 from scripts.helpers import API_call
-from scripts.summ_class import GenFinSummarizer
+from scripts.clustering_class import cluster_text
+from scripts.summary_class import GenFinSummarizer
 import json
+import streamlit as st
 
 
 def main():
+
+    # Streamlit title 
+    st.title("Assisted Summaries")
+    st.write("This form uses clustering to assist in generating meaningful summaries of twitter topics.")
+
+    # Create search functionality
+    #term = st.text_input("Enter a subject", " ")
     term = "abortion"
+
     gfs = GenFinSummarizer()
 
     # r = API_call(term, 100)
@@ -18,10 +28,11 @@ def main():
 
     work, workdf = gfs.Data_prep(r)
 
-    text_list = gfs.make_cloud_chunks(workdf)
-    output = gfs.summarize(text_list, length=300)
+    cluster_text(work)
 
-    print(output)
+    #text_list = gfs.make_cloud_chunks(workdf)
+    #output = gfs.summarize(text_list, length=300)
+    #print(output)
 
 
 # Execute main function
