@@ -1,4 +1,5 @@
 import re
+import pandas as pd
 #import nltk
 #from nltk import download as nltk_download
 #from nltk.tokenize import sent_tokenize
@@ -41,15 +42,15 @@ class GenFinSummarizer():
 
     # params: df of post info returned from API
     # returns: list of text blocks of titles and text, used for GenFinSummarizer
-    def make_cloud_chunks(tw_df):
+    def make_cloud_chunks(self, tw_df):
 
         chunk_size = 1024
         textblock = []
 
         #go post by post and add together in chunks that are less than 1024 words
-        #this is left for other deployemnts, tweets will of course not be this long
-        for tweet in tw_df:
+        for tweet in tw_df['content']:
             #if it's too long, chunk it
+            #tweets will of course not be this long; this is left for other deployemnts
             if len(tweet.split(" "))>chunk_size:
                 wds = tweet.split(" ")
                 nchunks = int(len(wds)/chunk_size) + (len(wds) % chunk_size > 0)
@@ -58,7 +59,7 @@ class GenFinSummarizer():
                 for c in range(len(chunked)):
                     chunked[c]= ' '.join(chunked[c])
             else:
-                chunked = tweet
+                chunked = [tweet]
 
             #add the chunk(s) to textblock
             for c in chunked:
@@ -71,4 +72,37 @@ class GenFinSummarizer():
                     else:
                         textblock.append(c)
 
+        #print(textblock)
         return textblock
+    
+    #params: json response from Twitter API
+    #returns: list of cleaned post text, and dataframe version for future development
+    def Data_prep(self, r):
+        
+        #list for posts
+        tlist = []
+        #dataframe for posts
+        posts_df = pd.DataFrame()
+
+        #get cleaned data
+        for post in r['data']:
+
+            #clean out special characters, links, @, etc.
+            this = post['text']
+            this = this.replace("\n", ' ')
+            this = re.sub(r'http\S+', '', this)
+            this = re.sub(r'@\S+', '', this)
+            gone = '[]//$\\()'
+            for g in gone:
+                this = this.replace(g, '')
+            this = this.strip()
+
+            #append to list
+            tlist.append(this)
+
+            #append to dataframe
+            posts_df = pd.concat([posts_df, pd.DataFrame({
+                'content': this
+            }, index=[len(posts_df)+1])])
+
+        return tlist, posts_df

@@ -4,7 +4,7 @@ import re
 import streamlit as st
 import json
 
-#params: search term and number of results to get
+#params: search term and number of results to get (10-100)
 #returns: response from Twitter API
 def API_call(query,n):
 
@@ -22,25 +22,8 @@ def API_call(query,n):
     else:
         return res.json()
 
-
 #params: json response from Twitter API
-#returns: dataframe of post text
-def Data_df(r):
-    
-    #dataframe for posts
-    posts_df = pd.DataFrame()
-
-    #get data
-    for post in r['data']:
-
-        posts_df = pd.concat([posts_df, pd.DataFrame({
-            'content': post['text']
-        }, index=[len(posts_df)+1])])
-    
-    return posts_df
-
-#params: json response from Twitter API
-#returns: list of cleaned post text
+#returns: list of cleaned post text, and dataframe version for future development
 def Data_prep(r):
     
     #list for posts
