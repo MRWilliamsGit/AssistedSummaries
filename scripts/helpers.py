@@ -15,6 +15,7 @@ def API_call(query, n):
 
     # if call is good, return json response
     if res.status_code != 200:
-        raise Exception(res.status_code, res.text)
+        #raise Exception(res.status_code, res.text)
+        return "Oops"
     else:
         return res.json()

@@ -2,6 +2,7 @@ import re
 import pandas as pd
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
+#class for generative summarization
 class GenFinSummarizer:
     def __init__(self):
 
@@ -35,7 +36,7 @@ class GenFinSummarizer:
         return summary
 
     # params: df of post info returned from API
-    # returns: list of text blocks of titles and text, used for GenFinSummarizer
+    # returns: list of text blocks of right size for summarizing
     def make_cloud_chunks(self, tw_df):
 
         chunk_size = 1024
