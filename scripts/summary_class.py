@@ -2,11 +2,10 @@ import re
 import pandas as pd
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
-
 class GenFinSummarizer:
     def __init__(self):
 
-        print("Initializing Object...")
+        print("Initializing Summarizer...")
         self.model = AutoModelForSeq2SeqLM.from_pretrained(
             "sshleifer/distilbart-cnn-12-6"
         )

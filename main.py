@@ -1,5 +1,5 @@
 from scripts.helpers import API_call
-from scripts.clustering_class import cluster_text
+from scripts.clustering_class import ClusterClass
 from scripts.summary_class import GenFinSummarizer
 import json
 import streamlit as st
@@ -16,6 +16,7 @@ def main():
     term = "abortion"
 
     gfs = GenFinSummarizer()
+    cc = ClusterClass()
 
     # r = API_call(term, 100)
     # print(r)
@@ -28,7 +29,8 @@ def main():
 
     work, workdf = gfs.Data_prep(r)
 
-    cluster_text(work)
+    emb = cc.vectorize(work)
+    cc.cluster_text(work, emb)
 
     #text_list = gfs.make_cloud_chunks(workdf)
     #output = gfs.summarize(text_list, length=300)
