@@ -2,17 +2,18 @@ from scripts.helpers import API_call
 from scripts.summ_class import GenFinSummarizer
 import json
 
+
 def main():
     term = "abortion"
     gfs = GenFinSummarizer()
 
-    #r = API_call(term, 100)
-    #print(r)
+    # r = API_call(term, 100)
+    # print(r)
 
-    #with open('data3.json', 'w') as f:
+    # with open('data3.json', 'w') as f:
     #    json.dump(r, f)
 
-    with open('data\data2.json', 'r') as myfile:
+    with open("data\data2.json", "r", encoding="utf8") as myfile:
         r = json.load(myfile)
 
     work, workdf = gfs.Data_prep(r)
