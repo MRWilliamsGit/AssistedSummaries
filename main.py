@@ -14,9 +14,10 @@ def main():
     # Create search functionality
     #term = st.text_input("Enter a subject", " ")
     term = "abortion"
+    clusters = 2
 
     gfs = GenFinSummarizer()
-    cc = ClusterClass()
+    cc = ClusterClass(clusters)
 
     # r = API_call(term, 100)
     # print(r)
@@ -29,12 +30,17 @@ def main():
 
     work, workdf = gfs.Data_prep(r)
 
-    emb = cc.vectorize(work)
-    cc.cluster_text(work, emb)
+    emb = cc.vectorize_text(work)
+    clusterdf = cc.cluster_text(work, emb)
+    #print(clusterdf)
 
-    #text_list = gfs.make_cloud_chunks(workdf)
-    #output = gfs.summarize(text_list, length=300)
-    #print(output)
+    #for i in range(true_k):
+    #    print(clusters[clusters['cluster'] == i])
+
+    for i in range(clusters):
+        text_list = gfs.make_cloud_chunks(clusterdf[clusterdf['cluster']==i])
+        output = gfs.summarize(text_list, length=200)
+        print(output)
 
 
 # Execute main function

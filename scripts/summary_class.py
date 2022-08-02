@@ -42,7 +42,7 @@ class GenFinSummarizer:
         textblock = []
 
         # go post by post and add together in chunks that are less than 1024 words
-        for tweet in tw_df["content"]:
+        for tweet in tw_df['text']:
             # if it's too long, chunk it
             # tweets will of course not be this long; this is left for other deployemnts
             if len(tweet.split(" ")) > chunk_size:
