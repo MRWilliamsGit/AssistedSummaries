@@ -2,7 +2,7 @@ import re
 import pandas as pd
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
-#class for generative summarization
+# class for generative summarization
 class GenFinSummarizer:
     def __init__(self):
 
@@ -43,7 +43,7 @@ class GenFinSummarizer:
         textblock = []
 
         # go post by post and add together in chunks that are less than 1024 words
-        for tweet in tw_df['text']:
+        for tweet in tw_df["text"]:
             # if it's too long, chunk it
             # tweets will of course not be this long; this is left for other deployemnts
             if len(tweet.split(" ")) > chunk_size:
@@ -100,4 +100,4 @@ class GenFinSummarizer:
                 [posts_df, pd.DataFrame({"content": this}, index=[len(posts_df) + 1])]
             )
 
-        return tlist, posts_df
+        return tlist
