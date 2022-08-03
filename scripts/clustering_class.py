@@ -23,8 +23,7 @@ class ClusterClass:
         )
 
         #downloads
-        #nltk.download("stopwords")
-        #nltk.download("wordnet")
+        nltk.download("wordnet")
 
 
     # params: list of texts to cluster
