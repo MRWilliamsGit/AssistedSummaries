@@ -23,7 +23,9 @@ class ClusterClass:
         )
 
         #downloads
+        #nltk.download("stopwords")
         nltk.download("wordnet")
+        nltk.download("omw-1.4")
 
 
     # params: list of texts to cluster
