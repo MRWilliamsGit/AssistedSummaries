@@ -71,7 +71,7 @@ class GenFinSummarizer:
         return textblock
 
     # params: json response from Twitter API
-    # returns: list of cleaned post text, and dataframe version for future development
+    # returns: list of cleaned post text
     def Data_prep(self, r):
 
         # list for posts

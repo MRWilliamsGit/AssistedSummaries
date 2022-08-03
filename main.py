@@ -1,4 +1,4 @@
-from scripts.helpers import API_call
+from scripts.API_caller import API_call
 from scripts.clustering_class import ClusterClass
 from scripts.summary_class import GenFinSummarizer
 import streamlit as st
@@ -22,15 +22,13 @@ def main():
             st.session_state.t = term
             # call API if it has not been collected before
             with st.spinner("Collectiong Data"):
-                # first collect info from API
-                r = API_call(term, 10)
+                r = API_call(term, 20)
                 # with open('data3.json', 'w') as f:
                 #    json.dump(r, f)
 
-                # with open("data\data2.json", "r", encoding="utf8") as myfile:
-                #    r = json.load(myfile)
+                #with open("data\data3.json", "r", encoding="utf8") as myfile:
+                #   r = json.load(myfile)
 
-                # if info is not collected, stop there, otherwise save to session state
                 if r == "Oops":
                     st.error("Twitter data could not be loaded at this time")
                     st.stop()
@@ -55,20 +53,28 @@ def main():
             cc = ClusterClass(clusters)
 
             # prep data and generate embeddings
-            work = st.session_state.gfs.Data_prep(st.session_state.r)
-            emb = cc.vectorize_text(work)
+            sumtext = st.session_state.gfs.Data_prep(st.session_state.r)
+            clustext = cc.prep_text(sumtext)
+            emb = cc.vectorize_text(clustext)
 
             # cluster text
-            clusterdf = cc.k_cluster_text(work, emb)
+            clusterdf = cc.k_cluster_text(sumtext, emb)
 
         # generate summaries for clusters
         with st.spinner("Generating Summaries"):
             for i in range(clusters):
+                # prep data, make summary, get percentage, get top words
                 text_list = st.session_state.gfs.make_cloud_chunks(
                     clusterdf[clusterdf["cluster"] == i]
                 )
                 output = st.session_state.gfs.summarize(text_list, length=200)
+                perc = (sum(clusterdf["cluster"] == i)/len(clusterdf))*100
+                wds = ", ".join(cc.z_scores(emb, clusterdf["cluster"] == i))
+
+                # display
                 st.write("Perspective #" + str(i + 1) + ":")
+                st.caption("Percent of tweets: "+ str(perc) + "%")
+                st.caption("Words most important to differentiating this persepective: " + wds)
                 st.write(output)
 
 
