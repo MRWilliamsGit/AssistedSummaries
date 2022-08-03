@@ -11,19 +11,20 @@ def main():
     # Streamlit title
     st.title("Assisted Summaries")
     st.write(
-        "This form uses clustering to assist in generating meaningful summaries of twitter topics."
+        "This form uses clustering to assist in generating meaningful summaries of Twitter activity."
     )
+    st.write("It bases its analysis on 20 relevant tweets pulled from Twitter's API.")
 
-    term = st.text_input("Enter a topic or search term:", " ")
+    term = st.text_input("Topic or search term:", " ")
 
     # collect Twitter data
     if "r" not in st.session_state or term != st.session_state.t:
         if term != " ":
             st.session_state.t = term
             # call API if it has not been collected before
-            with st.spinner("Collectiong Data"):
+            with st.spinner("Collecting Data"):
                 r = API_call(term, 20)
-                # with open('data3.json', 'w') as f:
+                #with open('dogs.json', 'w') as f:
                 #    json.dump(r, f)
 
                 #with open("data\data3.json", "r", encoding="utf8") as myfile:
@@ -39,7 +40,7 @@ def main():
     # once data is collected, continue
     else:
         clusters = st.number_input(
-            label="Enter the number of perspectives to find:",
+            label="Number of perspectives:",
             min_value=2,
             max_value=5,
             value=2,
