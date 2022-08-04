@@ -8,6 +8,7 @@ from nltk.stem import WordNetLemmatizer
 import pandas as pd
 import numpy as np
 import regex as re
+import csv
 
 # class for text clustering
 # params: number of clusters
@@ -16,7 +17,7 @@ class ClusterClass:
 
         print("Initializing Clustering Objects...")
         self.ksize = ksize
-        self.vectorizer = TfidfVectorizer(stop_words={"english"})
+        self.vectorizer = TfidfVectorizer(stop_words={"english"}, ngram_range=(1,2))
         self.lemmatizer = WordNetLemmatizer()
         self.model = KMeans(
             n_clusters=self.ksize, init="k-means++", max_iter=200, n_init=10
@@ -48,7 +49,7 @@ class ClusterClass:
             words = t.split()
             lemwords = [self.lemmatizer.lemmatize(word, "v") for word in words]
             t = ' '.join(lemwords)
-            newtext.append(t)  
+            newtext.append(t)
         
         return newtext
 
@@ -71,6 +72,7 @@ class ClusterClass:
         cluster_df = pd.DataFrame(list(zip(text, labels)), columns=["text", "cluster"])
 
         # return dataframe
+        # cluster_df.to_csv("data3_1", sep='\t', encoding='utf-8')
         return cluster_df
     
     # params: embeddings already created by "vectorize_text"

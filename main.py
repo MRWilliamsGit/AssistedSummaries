@@ -1,6 +1,7 @@
 from scripts.API_caller import API_call
 from scripts.clustering_class import ClusterClass
 from scripts.summary_class import GenFinSummarizer
+
 import streamlit as st
 import json
 
@@ -23,12 +24,12 @@ def main():
             st.session_state.t = term
             # call API if it has not been collected before
             with st.spinner("Collecting Data"):
-                r = API_call(term, 20)
+                #r = API_call(term, 20)
                 #with open('dogs.json', 'w') as f:
                 #    json.dump(r, f)
 
-                #with open("data\data3.json", "r", encoding="utf8") as myfile:
-                #   r = json.load(myfile)
+                with open("data\data2.json", "r", encoding="utf8") as myfile:
+                   r = json.load(myfile)
 
                 if r == "Oops":
                     st.error("Twitter data could not be loaded at this time")
@@ -68,6 +69,7 @@ def main():
                 text_list = st.session_state.gfs.make_cloud_chunks(
                     clusterdf[clusterdf["cluster"] == i]
                 )
+                #print(text_list)
                 output = st.session_state.gfs.summarize(text_list, length=200)
                 perc = (sum(clusterdf["cluster"] == i)/len(clusterdf))*100
                 wds = ", ".join(cc.z_scores(emb, clusterdf["cluster"] == i))
