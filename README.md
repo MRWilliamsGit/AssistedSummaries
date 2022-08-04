@@ -1,5 +1,8 @@
 # AssistedSummaries
-This project uses clustering to assist in generating meaningful summaries of Twitter topics.
+This project uses clustering to assist in generating meaningful summaries of Twitter activity. 
+
+## Challenge
+Social Media has become the most prominent source of information for most modern people, 
 
 ## Data
 This project uses the Twitter API to collect sets of tweets related to the search term provided by the user.
