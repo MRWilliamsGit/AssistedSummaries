@@ -24,12 +24,12 @@ def main():
             st.session_state.t = term
             # call API if it has not been collected before
             with st.spinner("Collecting Data"):
-                #r = API_call(term, 20)
-                #with open('dogs.json', 'w') as f:
+                r = API_call(term, 20)
+                #with open('data2.json', 'w') as f:
                 #    json.dump(r, f)
 
-                with open("data\data2.json", "r", encoding="utf8") as myfile:
-                   r = json.load(myfile)
+                #with open("data\data2.json", "r", encoding="utf8") as myfile:
+                #   r = json.load(myfile)
 
                 if r == "Oops":
                     st.error("Twitter data could not be loaded at this time")
