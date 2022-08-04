@@ -1,6 +1,5 @@
 black
 contractions
-csv
 networkx
 nltk
 pandas
