@@ -29,7 +29,7 @@ BearerToken = 'abcdef'
 ```
 pip install -r requirements.txt
 ```
-6. To run the app locally, use the command line terminal.
+5. To run the app locally, use the command line terminal.
 ```
 streamlit run main.py
 ```
