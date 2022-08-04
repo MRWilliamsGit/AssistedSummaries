@@ -21,7 +21,10 @@ Please enjoy interacting with this tool through its public app: https://mrwillia
 ## Local Deployment
 1. Obtain a Twitter Developer login and app bearer token. [Instructions Here](https://developer.twitter.com/en/support/twitter-api/developer-account)
 2. Clone this repository to your local environment and add an additional folder named '.streamlit' (note the period).
-3. In this folder, add a .toml file named 'secrets.toml' with your Twitter bearer token as content in this format: 'BearerToken = 'AAAAAAAAAAA''.
+3. In this folder, add a .toml file named 'secrets.toml' with your Twitter bearer token.
+```
+BearerToken = 'abcdef'
+```
 5. Now that you have all the information you need, install the dependancies to your local environment.
 ```
 pip install -r requirements.txt
