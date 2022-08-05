@@ -1,12 +1,10 @@
 black
 contractions
-networkx
 nltk
 pandas
 pylint
 pytest
 requests
-requests-oauthlib
 sklearn
 streamlit
 torch
