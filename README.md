@@ -4,7 +4,7 @@ Social Media has become the most prominent source of information for most modern
 In order to help generate meaningful summaries, this project uses clustering to first sort tweets into sets by topic, then generates individual summaries for each cluster. The most important keywords and relative saturation of each cluster are provided as additional insight.
 
 ## Data
-This project uses the Twitter API to collect sets of 20 tweets related to the search term provided by the user. Tweets are cleaned and pre-processed by removing links, @Usernames and special characters. For clustering purposes, words are further reduced by removing stop-words and lemmatizing.
+This project uses the Twitter API to collect sets of 50 tweets related to the search term provided by the user. Tweets are cleaned and pre-processed by removing links, @Usernames and special characters. For clustering purposes, words are further reduced by removing stop-words and lemmatizing.
 
 ## Clustering
 The tweets are translated into vectors using TF_IDF, which measures the importance of each word in the tweet relative to its importance overall. The tweets are then sorted based on simple K-Means clustering. 
@@ -13,7 +13,7 @@ The tweets are translated into vectors using TF_IDF, which measures the importan
 Once the tweets have been sorted, they are summarized by a pre-trained [DistilBART model](https://huggingface.co/sshleifer/distilbart-cnn-12-6). BART uses bi-directional encoding like BERT, but causal decoding like GPT​, and generally outperforms BERT in summarization tasks.
 
 ## Explainability
-The words that contribute most to each cluster are determined through their z-scores, which measure how important they are to the cluster relative to how important they are on average. The top three words that are more important to the cluster than they are to other clusters, are displayed.
+The words that contribute most to each cluster are determined through their z-scores, which measure how important they are to the cluster relative to how important they are on average. The top several words that are more important to the cluster than they are to other clusters, are displayed.
 
 ## Deployment
 Please enjoy interacting with this tool through its public app: https://mrwilliamsgit-assistedsummaries-main-3agmtw.streamlitapp.com/
