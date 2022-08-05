@@ -8,7 +8,7 @@ format:
 lint:
 	pylint --disable=R,C main.py
 
-test:
-	python3 -m pytest -vv test.py
+#test:
+#	python3 -m pytest -vv test.py
 
-all: install format lint test
+all: install format lint

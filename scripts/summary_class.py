@@ -2,12 +2,6 @@ import re
 import pandas as pd
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-import nltk
-from nltk.cluster.util import cosine_distance
-import numpy as np
-import networkx as nx
-
 # class for generative summarization
 class GenFinSummarizer:
     def __init__(self):
@@ -88,11 +82,12 @@ class GenFinSummarizer:
         # get cleaned data
         for post in r["data"]:
 
-            # clean out special characters, links, @, etc.
+            # clean out special characters, links, @, hashtags, etc.
             this = post["text"]
             this = this.replace("\n", " ")
             this = re.sub(r"http\S+", "", this)
             this = re.sub(r"@\S+", "", this)
+            this = re.sub(r"#\S+", "", this)
             gone = "[]//$\\()"
             for g in gone:
                 this = this.replace(g, "")

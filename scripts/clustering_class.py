@@ -1,9 +1,10 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.cluster import KMeans
 
 import contractions
 import nltk
 from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
 
 import pandas as pd
 import numpy as np
@@ -17,17 +18,16 @@ class ClusterClass:
 
         print("Initializing Clustering Objects...")
         self.ksize = ksize
-        self.vectorizer = TfidfVectorizer(stop_words={"english"}, ngram_range=(1,2))
+        self.vectorizer = TfidfVectorizer(stop_words={"english"}, ngram_range=(1, 2))
         self.lemmatizer = WordNetLemmatizer()
         self.model = KMeans(
             n_clusters=self.ksize, init="k-means++", max_iter=200, n_init=10
         )
 
-        #downloads
-        #nltk.download("stopwords")
+        # downloads
+        # nltk.download("stopwords")
         nltk.download("wordnet")
         nltk.download("omw-1.4")
-
 
     # params: list of texts to cluster
     # returns: text prepped for embeddings
@@ -36,27 +36,36 @@ class ClusterClass:
         newtext = []
 
         for t in text:
-            # Note: TfidfVectorizer will handle stopwords
             # remove numbers, contractions, punctuation
             t = t.lower()
-            t = re.sub(r'\d+' , '', t)
+            t = re.sub(r"\d+", "", t)
             t = contractions.fix(t)
-            punct = '''!()[]{};«№»:'",`./?@=#$-(%^)+&[*_]~'''
+            punct = """!()[]{};«№»:'",`./?@=#$-(%^)+&[*_]~"""
             for p in punct:
                 t = t.replace(p, "")
-            
-            # lemmatize
+
             words = t.split()
+
+            # remove stopwords
+            # Note: TfidfVectorizer is supposed to handle stopwords, but it doesn't seem to
+            swds = set(stopwords.words("english"))
+            ft = []
+            for w in words:
+                if w not in swds:
+                    ft.append(w)
+            words = ft
+
+            # lemmatize
             lemwords = [self.lemmatizer.lemmatize(word, "v") for word in words]
-            t = ' '.join(lemwords)
+            t = " ".join(lemwords)
             newtext.append(t)
-        
+
         return newtext
 
     # params: list of texts to cluster
     # returns: list of embeddings for text based on TF-IDF
     def vectorize_text(self, text):
-        #this will already lowercase, remove stopwords, etc
+        # this will already lowercase, remove stopwords, etc
         X = self.vectorizer.fit_transform(text)
         return X
 
@@ -74,10 +83,10 @@ class ClusterClass:
         # return dataframe
         # cluster_df.to_csv("data3_1", sep='\t', encoding='utf-8')
         return cluster_df
-    
+
     # params: embeddings already created by "vectorize_text"
     # params: bool list of what text belong to the cluster
-    # returns: top three words with highest z-scores for this cluster
+    # returns: top five words/phrases with highest z-scores for this cluster
     # z-score = (IDF average of word in cluster - IDF average of word in corpus)
     # /(standard deviation of IDF score)
     def z_scores(self, emb, w):
@@ -94,8 +103,8 @@ class ClusterClass:
         # get standard deviation for each word
         dev = np.std(tfidf, axis=0)
 
-        # calculate z-score for each word 
-        diff = clumean-cormean 
+        # calculate z-score for each word
+        diff = clumean - cormean
         score = diff / dev
         score = score.tolist()
 
@@ -103,9 +112,71 @@ class ClusterClass:
         wds = self.vectorizer.vocabulary_.items()
 
         # get the top words
-        z_words = []
         zwds = sorted(zip(score[0], wds), reverse=True)
-        for z in zwds[:5]:
-            z_words.append(z[1][0])
+        # z_words = []
+        # for z in zwds[:5]:
+        #    z_words.append(z[1][0])
 
-        return z_words
+        return zwds
+
+    # params: list of tweets in the cluster
+    # returns: word/phrase count for the cluster
+    def wd_count(self, text):
+
+        # prep (lemmatize, etc)
+        text = self.prep_text(text)
+
+        # transform all tweets to list of words
+        blocklist = [" ".join(text)]
+
+        # get wordcount
+        cv = CountVectorizer(ngram_range=(1, 2))
+        cv_fit = cv.fit_transform(blocklist)
+        word_list = cv.get_feature_names_out()
+
+        # zip words/phrases and their counts
+        count_list = np.asarray(cv_fit.sum(axis=0))[0]
+        cwds = sorted(zip(count_list, word_list), reverse=True)
+
+        return cwds
+
+    # params: embeddings already created by "vectorize_text"
+    # params: bool list of what tweets belong to the cluster
+    # params: list of tweets in the cluster
+    # returns: top distinguishing words for the cluster
+    # uses: z_scores and wd_count internally
+    def imp_words(self, emb, w, text):
+        # get list of z-scores and word counts
+        zwds = self.z_scores(emb, w)
+        cwds = self.wd_count(text)
+
+        # combine
+        cwds_df = pd.DataFrame(cwds, columns=["count", "phrase"])
+        zwds_df = pd.DataFrame(zwds, columns=["zscore", "tuple"])
+        tuple_df = pd.DataFrame(zwds_df["tuple"].tolist(), columns=["phrase", "ID"])
+        tuple_df["zscore"] = zwds_df["zscore"]
+        all_df = tuple_df.merge(cwds_df, how="right", on="phrase")
+        # print(all_df)
+
+        # remove count 1, negative z-score
+        df = all_df.drop(all_df[(all_df["count"] == 1)].index)
+        df = df.drop(df[(df["zscore"] < 0.5)].index)
+
+        # multiply zscore and count to find significance
+        # z-score should have more importance since it already considers count
+        df["impscore"] = (10 * df["zscore"]) * (df["count"] / 2)
+
+        df = df.sort_values(by=["impscore"], ascending=False)
+        # print(df)
+
+        # return information
+        # catch for no returns
+        if len(df) > 5:
+            hi = df["phrase"].tolist()
+            hi = hi[:5]
+            return ", ".join(hi)
+        elif len(df) == 0:
+            return "(there are no significant phrases for this cluster)"
+        else:
+            hi = df["phrase"].tolist()
+            return ", ".join(hi)
