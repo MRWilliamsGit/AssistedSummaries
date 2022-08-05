@@ -25,7 +25,11 @@ class ClusterClass:
         )
 
         # downloads
-        nltk.download("stopwords")
+        try:
+            nltk.data.find('stopwords')
+        except LookupError:
+            nltk.download('stopwords')
+
         nltk.download("wordnet")
         nltk.download("omw-1.4")
 
