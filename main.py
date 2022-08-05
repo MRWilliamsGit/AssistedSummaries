@@ -46,6 +46,7 @@ def main():
             max_value=5,
             value=2,
         )
+        clusters = int(clusters)
 
         # cluster text
         with st.spinner("Clustering Tweets"):
