@@ -24,12 +24,12 @@ def main():
             st.session_state.t = term
             # call API if it has not been collected before
             with st.spinner("Collecting Data"):
-                #r = API_call(term, 30)
+                r = API_call(term, 50)
                 # with open('data2.json', 'w') as f:
                 #    json.dump(r, f)
 
-                with open("data\data3.json", "r", encoding="utf8") as myfile:
-                  r = json.load(myfile)
+                #with open("data\data3.json", "r", encoding="utf8") as myfile:
+                #  r = json.load(myfile)
 
                 if r == "Oops":
                     st.error("Twitter data could not be loaded at this time")
@@ -46,6 +46,8 @@ def main():
             max_value=5,
             value=2,
         )
+
+        #somehow this reads as float when live on streamlit so fixing:
         clusters = int(clusters)
 
         # cluster text
