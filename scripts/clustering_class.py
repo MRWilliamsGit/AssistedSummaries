@@ -17,7 +17,7 @@ class ClusterClass:
     def __init__(self, ksize):
 
         print("Initializing Clustering Objects...")
-        self.ksize = ksize
+        self.ksize = int(ksize)
         self.vectorizer = TfidfVectorizer(stop_words={"english"}, ngram_range=(1, 2))
         self.lemmatizer = WordNetLemmatizer()
         self.model = KMeans(
