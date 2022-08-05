@@ -14,7 +14,7 @@ def main():
     st.write(
         "This form uses clustering to assist in generating meaningful summaries of Twitter activity."
     )
-    st.write("It bases its analysis on 20 relevant tweets pulled from Twitter's API.")
+    st.write("It bases its analysis on 50 relevant tweets pulled from Twitter's API.")
 
     term = st.text_input("Topic or search term:", " ")
 
