@@ -24,7 +24,7 @@ def main():
             st.session_state.t = term
             # call API if it has not been collected before
             with st.spinner("Collecting Data"):
-                r = API_call(term, 30)
+                r = API_call(term, 50)
                 # with open('data2.json', 'w') as f:
                 #    json.dump(r, f)
 
